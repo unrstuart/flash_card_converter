@@ -81,7 +81,7 @@ std::string ExtractEnglish(const std::string& contents,
                            const std::string& verb) {
   std::string ret;
   if (ExtractEnglish1(contents, &ret)) return ret;
-  std::cerr << "Couldn't find english span for " << verb << std::endl;
+  std::cerr << verb << std::endl;
 
   return "";
 }
@@ -105,14 +105,12 @@ void ExtractConjugations(const std::string& contents, Verb* verb) {
 <th scope="col">Subjunctive II</th>
 <th scope="col">Imperative</th>)");
   if (index == std::string::npos) {
-    std::cerr << "Couldn't extract conjugations for " << verb->infinitive
-              << std::endl;
+    std::cerr << verb->infinitive << std::endl;
     return;
   }
   index = contents.find("<tr><td>du ", index);
   if (index == std::string::npos) {
-    std::cerr << "Couldn't further extract conjugations for "
-              << verb->infinitive;
+    std::cerr << verb->infinitive << std::endl;
     return;
   }
   const std::vector<std::string> tokens =
@@ -128,7 +126,7 @@ std::string ExtractParticiple(const std::string& contents,
                               const std::string& verb) {
   auto index = contents.find("<b>Participle II</b>:");
   if (index == contents.npos) {
-    std::cerr << "couldn't extract participle for " << verb << std::endl;
+    std::cerr << verb << std::endl;
     return "";
   }
   index = contents.find("\n", index) + 1;
@@ -138,9 +136,13 @@ std::string ExtractParticiple(const std::string& contents,
 
 Verb ScrapeVerb(const std::string& v) {
   static bool scrape = false;
+  Verb verb;
+  verb.infinitive = v.substr(0, v.find(","));
+  verb.english = v.substr(verb.infinitive.size() + 1);
   char cmd[2000];
   std::string file = v;
   if (file.substr(0, 5) == "sich ") file = file.substr(5);
+  file = file.substr(0, file.find(" "));
   if (scrape) {
     sprintf(cmd,
             "curl 'https://www.verbformen.com/conjugation/?w=%s' > /tmp/%s.htm",
@@ -155,9 +157,6 @@ Verb ScrapeVerb(const std::string& v) {
   sprintf(cmd, "/tmp/%s.htm", file.c_str());
   std::string contents = ReadFile(cmd);
 
-  Verb verb;
-  verb.infinitive = v;
-  verb.english = ExtractEnglish(contents, file);
   ExtractConjugations(contents, &verb);
   verb.participle = ExtractParticiple(contents, v);
 

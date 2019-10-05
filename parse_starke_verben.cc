@@ -9,17 +9,7 @@
 #include <string>
 #include <vector>
 
-struct Verb {
-  std::string infinitive;
-  std::string form;
-  std::string english;
-  std::string preterite;
-  std::string participle;
-  std::string imperative;
-  std::string present_du_form;
-  std::string konj_1;
-  std::string konj_2;
-};
+#include "verb.h"
 
 std::string Trim(const unsigned char* str) {
   int s = 0;
@@ -69,13 +59,6 @@ std::string MakeString(Iter begin, Iter end) {
     str += *(begin++);
   }
   return str;
-}
-
-std::ostream& operator<<(std::ostream& out, const Verb& verb) {
-  return out << verb.infinitive << "\t" << verb.form << "\t" << verb.english
-             << "\t" << verb.preterite << "\t" << verb.participle << "\t"
-             << verb.imperative << "\t" << verb.present_du_form << "\t"
-             << verb.konj_1 << "\t" << verb.konj_2;
 }
 
 int main(int argc, char** argv) {
