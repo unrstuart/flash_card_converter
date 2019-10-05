@@ -1,3 +1,8 @@
+// Converts a list of strong german verbs to a TSV file. The file
+// 'starke_verben' should have been included in this repository.
+//
+// Usage: a.out starke_verben > out.tsv
+
 #include <cstdio>
 #include <cstdlib>
 #include <iostream>
@@ -67,10 +72,10 @@ std::string MakeString(Iter begin, Iter end) {
 }
 
 std::ostream& operator<<(std::ostream& out, const Verb& verb) {
-  return out <<  verb.infinitive << "\t" << verb.form << "\t"
-             << verb.english << "\t" << verb.preterite << "\t"
-             << verb.imperative << "\t" << verb.present_du_form << "\t"
-             << verb.konj_1 << "\t" << verb.konj_2;
+  return out << verb.infinitive << "\t" << verb.form << "\t" << verb.english
+             << "\t" << verb.preterite << "\t" << verb.imperative << "\t"
+             << verb.present_du_form << "\t" << verb.konj_1 << "\t"
+             << verb.konj_2;
 }
 
 int main(int argc, char** argv) {
